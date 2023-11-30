@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "build": "tsup src --out-dir build",
+    "dev": "tsx watch src/server.ts",
+    "lint": "eslint src --ext .ts --fix",
+    "migrate:create": "npm run knex -- migrate:make --migrations-directory ./src/db/migrations -x ts",
+    "knex": "node --import tsx ./node_modules/knex/bin/cli.js"
   },
   "keywords": [],
   "author": "",
