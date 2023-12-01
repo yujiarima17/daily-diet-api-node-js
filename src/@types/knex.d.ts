@@ -14,7 +14,6 @@ declare module 'knex/type/tables' {
       eat_time: string
       user_id: string
       is_in_diet: boolean
-      session_id?: string
     }
   }
 }
