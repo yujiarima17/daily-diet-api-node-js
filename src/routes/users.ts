@@ -9,7 +9,6 @@ const userBodySchema = z.object({
     password:z.string()
 })
 
-
 export async function usersRoutes(app:FastifyInstance){
     app.get('/',{preHandler:[checkSessionIdExists]},async(request,reply)=>{
            let sessionId = request.cookies.sessionId
@@ -18,7 +17,7 @@ export async function usersRoutes(app:FastifyInstance){
             return {user}
     })
 
-  app.delete('/:id',async(request,reply)=>{
+    app.delete('/:id',async(request,reply)=>{
 
     const requestParamsSchema = z.object({
         id:z.string().uuid()
@@ -31,7 +30,7 @@ export async function usersRoutes(app:FastifyInstance){
         return reply.status(200).send()
     
   })
-  app.post('/',async(request,reply)=>{
+   app.post('/',async(request,reply)=>{
 
         const {username,password} = userBodySchema.parse(request.body)
         let sessionId = randomUUID()

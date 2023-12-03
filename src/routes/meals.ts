@@ -1,7 +1,5 @@
 import { FastifyInstance } from "fastify";
 import {knex} from '../database'
-
-import {up,down} from '../../db/migrations/20231130215204_create-users'
 import { randomUUID } from "node:crypto";
 import {z} from 'zod'
 import {checkSessionIdExists} from '../middlewares/check-session-id-exists'
@@ -46,7 +44,6 @@ export async function mealsRoutes(app:FastifyInstance){
        const sessionId = request.cookies.sessionId
        const useId = await knex('users').where({session_id:sessionId}).select()
        const meals = await knex('meals').where({user_id:useId})
-       console.log(useId)
        return {meals}
 
     })

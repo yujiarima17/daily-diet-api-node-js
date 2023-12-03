@@ -11,7 +11,7 @@ function bestSequence(mealsData : MealProp[]){
     let longestSequence :number[]= [];
     
     for (const meal of mealsData) {
-       if (meal.is_in_diet === 1) {
+       if (meal.is_in_diet === inDietNumberValue) {
          currentSequence.push(meal.is_in_diet);
        } else {
          currentSequence = [];
