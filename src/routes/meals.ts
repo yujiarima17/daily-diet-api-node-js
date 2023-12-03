@@ -1,5 +1,6 @@
 import { FastifyInstance } from "fastify";
 import {knex} from '../database'
+
 import {up,down} from '../../db/migrations/20231130215204_create-users'
 import { randomUUID } from "node:crypto";
 import {z} from 'zod'
@@ -40,16 +41,16 @@ export async function mealsRoutes(app:FastifyInstance){
         return {meal}
 
     })
-    app.get('/',async(request,reply)=>{
+    app.get('/',{preHandler:[checkSessionIdExists]},async(request,reply)=>{
 
        const sessionId = request.cookies.sessionId
        const useId = await knex('users').where({session_id:sessionId}).select()
-       console.log(sessionId)
-    //    const meals = await knex('meals').where({user_id:useId})
-    //    return {meals}
+       const meals = await knex('meals').where({user_id:useId})
+       console.log(useId)
+       return {meals}
 
     })
-    app.put('/:id',async (request,reply)=>{
+    app.put('/:id',{preHandler:[checkSessionIdExists]},async (request,reply)=>{
         
         const requestParamsSchema = z.object({
             id:z.string().uuid()
@@ -72,7 +73,7 @@ export async function mealsRoutes(app:FastifyInstance){
         }
         return reply.status(400).send()
     })
-    app.delete('/:id',async (request,reply)=>{
+    app.delete('/:id',{preHandler:[checkSessionIdExists]},async (request,reply)=>{
         const requestParamsSchema = z.object({
             id:z.string().uuid()
         })
