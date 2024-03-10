@@ -32,7 +32,12 @@ export async function usersRoutes(app:FastifyInstance){
   })
    app.post('/',async(request,reply)=>{
 
-        const {username,password} = userBodySchema.parse(request.body)
+        const requestBody = userBodySchema.safeParse(request.body)
+        if(!requestBody.success){
+            return reply.status(400).send('Incorrect JSON body!')
+        } 
+        const {password,username} = requestBody.data
+       
         let sessionId = randomUUID()
         reply.cookie('sessionId',sessionId,{
                 path:'/',

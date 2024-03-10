@@ -6,13 +6,15 @@ interface MealProp{
     is_in_diet:number
   }
 function bestSequence(mealsData : MealProp[]){
-    let inDietNumberValue = 1
+  
+    let inDietNumber = 1
     let currentSequence :number[] = [];
     let longestSequence :number[]= [];
     
     for (const meal of mealsData) {
-       if (meal.is_in_diet === inDietNumberValue) {
-         currentSequence.push(meal.is_in_diet);
+       const {is_in_diet} = meal
+       if (is_in_diet === inDietNumber) {
+         currentSequence.push(is_in_diet);
        } else {
          currentSequence = [];
        }
@@ -26,6 +28,7 @@ function bestSequence(mealsData : MealProp[]){
 async function getUserMetric(metric:string,sessionId:string){
 
   const userId = await knex('users').where({session_id:sessionId}).select()
+
   switch(metric){
     case('meals-total-amount'):
 
@@ -47,16 +50,19 @@ async function getUserMetric(metric:string,sessionId:string){
        const mealsOutDietAmount = mealsOutDiet.length
        return {meals_out_diet : mealsOutDietAmount}
 
-    case 'best-diet-sequence':
+    case ('best-diet-sequence'):
       
        const mealsData :MealProp[] = await knex('meals').where({ user_id: userId });
        const longestSequence = bestSequence(mealsData)
        return {best_sequence : longestSequence}
 
+    default:
+        return {}
   }
 }
 export async function usersMetricsRoutes(app:FastifyInstance){
     app.get('/:id/:metric',{preHandler:checkSessionIdExists},async (request,reply)=>{
+        
         const sessionId = request.cookies.sessionId
         const requestParamsSchema = z.object({
             id:z.string().uuid(),
